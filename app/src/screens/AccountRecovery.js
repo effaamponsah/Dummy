@@ -44,10 +44,11 @@ export default class Recovery extends Component {
         .then(res => {
           if (res.data.success == true) {
             this.setState({ isVisible: false });
-            Alert.alert(
-              "Success",
-              "E-mail successfully sent. Please check your mail for the new password"
-            );
+            Toast.show({
+              text: "Email successfully sent",
+              type: "success",
+              duration: 4000
+            });
           }
           // Alert.alert("Ooops", res.data.error[0]);
           else {
