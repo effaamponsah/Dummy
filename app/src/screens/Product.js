@@ -3,7 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
+  //Image,
   Button,
   Alert,
   ScrollView,
@@ -12,7 +12,8 @@ import {
   // Picker,
   NetInfo,
   Animated,
-  Dimensions
+  Dimensions,
+  Easing
 } from "react-native";
 import Slider from "../components/Slider";
 import { api, colors } from "../constants";
@@ -21,8 +22,13 @@ import { observer, inject } from "mobx-react/native";
 import InformationData from "../components/InformationData";
 import axios from "axios";
 import CardItems from "../components/Card";
-import { Overlay } from "react-native-elements";
+import { Overlay, Rating, Image } from "react-native-elements";
 import ProductSlider from "../components/ProductSlider";
+import EmpytCart from "../components/EmptyCart";
+import Related from "../components/Related";
+import Placeholder from "../components/Placeholder";
+const img = require("../../assets/images/internet.png");
+
 
 const deviceWidth = Dimensions.get("window").width;
 const FIXED_BAR_WIDTH = 100;
@@ -63,18 +69,52 @@ export default class Product extends Component {
       language: "",
       isLoading: true,
       product_option_id: "",
-      isVisible: false
+      isVisible: false,
+      nointernet: false,
+      optionp2: "",
+      relatedData: "",
+      myArray:[]
     };
+    this.animatedValue = new Animated.Value(0);
   }
   componentDidMount() {
     const id = this.props.navigation.getParam("id", "no id");
     this._isMounted = true;
     this.fetch(id);
+    this.fetchRelated(id);
   }
 
   componentWillUnmount() {
     _isMounted = false;
   }
+
+  animteOptions() {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(this.animatedValue, {
+          toValue: 1.0,
+          duration: 150,
+          easing: Easing.linear,
+          useNativeDriver: true
+        }),
+        Animated.timing(this.animatedValue, {
+          toValue: -1.0,
+          duration: 300,
+          easing: Easing.linear,
+          useNativeDriver: true
+        }),
+        Animated.timing(this.animatedValue, {
+          toValue: 0.0,
+          duration: 150,
+          easing: Easing.linear,
+          useNativeDriver: true
+        })
+      ]), {
+        iterations: 5
+      }
+    ).start();
+  }
+
 
   fetch(i) {
     axios
@@ -103,8 +143,15 @@ export default class Product extends Component {
   trial() {
     if (this.state.data.options.length > 0) {
       this.setState({ test: this.state.data.options[0].product_option_id });
+    // this.setState({ combinedimgs: [...this.state.images, this.state.data.image] })
+    // this.setState(data => ({
+    //   myArray: [...data.images, "new value"]
+    // }))
     }
   }
+
+  // moscoman(){
+  // }
 
   _addToWishList = () => {
     this.setState({ isVisible: true });
@@ -164,7 +211,11 @@ export default class Product extends Component {
               Toast.show({ text: "Item Added to Cart", type: "success" });
             } else if (response.data.error.option) {
               this.setState({ isVisible: false });
-              Toast.show({ text: "Select prefered options", type: "warning" });
+              Toast.show({ text: "Select preffered options", type: "warning" });
+              // this.animteOptions();
+    this.animteOptions()
+
+
             } else {
               this.setState({ isVisible: false });
               Alert.alert("Oops", "This is strange");
@@ -179,21 +230,76 @@ export default class Product extends Component {
 
   fetchRelated() {
     const id = this.props.navigation.getParam("id", "no id");
+    axios
+      .get(api.relatedItems + id, {
+        headers: {
+          "X-Oc-Image-Dimension": "500 x 1000"
+        }
+      })
+      .then(response => {
+        // this.setState({ relatedData: response.data.data });
+        if (response.data.data.length != 0) {
+          console.warn("Related products found");
+          this.setState({ relatedData: response.data.data });
+        }
+      })
+      .catch(error => {
+        console.warn("Unable to fetch the data");
+      });
   }
 
+  retryPress = () => {
+    const id = this.props.navigation.getParam("id", "no id");
+    NetInfo.getConnectionInfo().then(connection => {
+      if (connection.type == "none") {
+        this.fetch(id);
+      } else {
+        this.setState({ isLoading: true, nointernet: false });
+        this.fetch(id);
+        this.fetchRelated(id);
+      }
+    });
+  };
+
   render() {
+    const id = this.props.navigation.getParam("id", "no id");
+    console.warn(this.state.myArray)
     if (this.state.isLoading) {
       return (
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-          <ActivityIndicator
-            color={{ color: colors.primaryBlue }}
-            size="small"
-          />
+          <Text>Retrieving item....</Text>
         </View>
       );
     }
+
+    if (this.state.nointernet) {
+      return (
+        // <View
+        //   style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        // >
+        //   <Text>
+        //     It appears you dont have a stable connection with our
+        //     servers. Connect to the internet and try again
+        //   </Text>
+        // </View>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <EmpytCart
+            text1="It appears you dont have internet connection"
+            text2="Connect to the internet and try again"
+            btn
+            func={this.retryPress}
+            btntitle="Retry"
+            image={img}
+          />
+          {/* <Button title="Retry" onPress={() => this.retryPress()} /> */}
+        </View>
+      );
+    }
+    if (this.state.data) {
     return (
       <Root>
         <ScrollView style={styles.container}>
@@ -206,6 +312,11 @@ export default class Product extends Component {
                   source={{ uri: this.state.data.image }}
                   // style={styles.imageStyle}
                   style={{ width: deviceWidth, height: 250 }}
+                  // PlaceholderContent={
+                  //     <ActivityIndicator
+                  //       size="small"
+                  //     />
+                  //   }
                 />
               ) : (
                   <ScrollView
@@ -253,7 +364,21 @@ export default class Product extends Component {
                 )}
             </View>
 
-            <View style={{ marginLeft: 20 }}>
+            <Animated.View
+                style={{ 
+                  marginLeft: 20, marginTop: 10,
+                  transform:[
+                      {
+                        rotate:this.animatedValue.interpolate({
+                          inputRange:[-1, 1],
+                          outputRange:['-0.1rad', '0.1rad']
+                        })
+                      }
+                  ]
+                
+                }}
+                
+              >
               {this.state.data.options.length > 0 ? (
                 <View>
                   {this.state.data.options.map((d, i) => (
@@ -281,7 +406,7 @@ export default class Product extends Component {
                   ))}
                 </View>
               ) : null}
-            </View>
+              </Animated.View>
 
             <View style={{ padding: 15 }}>
               <Text style={{ color: colors.primaryGrey }}>
@@ -457,10 +582,17 @@ export default class Product extends Component {
           {/* Handles the options */}
 
           {/* Related ITems */}
+          {this.state.relatedData ? (
+              <Related
+                products={this.state.relatedData}
+                title="Products you may like"
+              />
+            ) : null}
         </ScrollView>
       </Root>
     );
   }
+}
 }
 
 const styles = StyleSheet.create({

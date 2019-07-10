@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator, 
+  Platform
 } from "react-native";
 import { Icon, Toast, Root } from "native-base";
 import { colors, api } from "../constants";
@@ -42,11 +43,11 @@ export default class Recovery extends Component {
         })
         .then(res => {
           if (res.data.success == true) {
+            this.setState({ isVisible: false });
             Alert.alert(
               "Success",
               "E-mail successfully sent. Please check your mail for the new password"
             );
-            this.setState({ isVisible: false });
           }
           // Alert.alert("Ooops", res.data.error[0]);
           else {
@@ -85,7 +86,6 @@ export default class Recovery extends Component {
               <View
                 style={{
                   justifyContent: "center",
-                  borderRightWidth: StyleSheet.hairlineWidth
                 }}
               >
                 <Icon name="mail" style={styles.iconStyle} />
@@ -157,7 +157,14 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     borderRadius: 5,
     marginTop: 5,
-    borderWidth: StyleSheet.hairlineWidth
+    borderWidth: StyleSheet.hairlineWidth,
+    ...Platform.select({
+      ios: {
+        // height: 35,
+        justifyContent: "center",
+        height: 45
+      }
+    })
   },
   iconStyle: {
     height: 26,
