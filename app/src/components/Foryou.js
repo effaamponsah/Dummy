@@ -119,7 +119,7 @@ class Foryou extends Component {
         </View>
         {/* <View style={{ justifyContent: 'space-between', backgroundColor: 'red' }}> */}
         <ImageBackground
-          style={{ justifyContent: "space-between", marginTop: 18 }}
+          style={{ justifyContent: "space-between", marginTop: 18, height: screen.height / 3 }}
           source={require("../../assets/images/gift3.png")}
         >
           <TouchableOpacity
@@ -137,11 +137,11 @@ class Foryou extends Component {
           >
             <Card
               style={{
-                padding: 10,
+                padding: 5,
                 // marginLeft: 15,
                 maxWidth: screen.width / 3,
                 // borderRadius: 9,
-                marginTop: 20,
+                // marginTop: 20,
                 marginBottom: 20
               }}
             >
@@ -193,7 +193,10 @@ class Foryou extends Component {
 const styles = StyleSheet.create({
   container: {
     // backgroundColor: "red",
-    marginTop: 20
+    marginTop: 20,
+    height:screen.height / 2.8,
+    marginBottom: 20,
+
     // paddingLeft: 10,
     // paddingRight: 10,
     // justifyContent: "space-between"
