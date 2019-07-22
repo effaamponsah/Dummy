@@ -195,7 +195,7 @@ export default class CartItems extends Component {
                   onPress={() => this._onDecrementPress(d.key, d.quantity)}
                 >
                   <Icon
-                    name="md-remove-circle"
+                    name="ios-remove-circle-outline"
                     style={{ color: colors.primaryBlue, fontSize: 22 }}
                   />
                 </TouchableOpacity>
