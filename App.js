@@ -23,10 +23,12 @@ import NavigationService from "./app/src/navigation/NavigationService";
 import Products from "./app/src/screens/Products";
 import Product from "./app/src/screens/Product";
 import Account from "./app/src/screens/Account";
+import Done from "./app/src/screens/Thankyou";
 import Testing from "./app/src/screens/Test";
 import { store } from "./app/src/store";
 import NoInternet from "./app/src/screens/NoConnection";
 import { Root } from "native-base";
+
 
 export default class App extends Component {
   constructor(props) {
@@ -48,18 +50,12 @@ export default class App extends Component {
   render() {
     return (
       <Provider {...store}>
-        {/* {this.state.internet == true ? ( */}
         <TabNav
           ref={r => {
             NavigationService.setTopLevelNavigator(r);
           }}
         />
-        {/* <Track /> */}
-        {/* ) : ( */}
-        {/* <View style={styles.container}> */}
-        {/* <NoInternet /> */}
-        {/* </View> */}
-        {/* )} */}
+      
       </Provider>
     );
   }
