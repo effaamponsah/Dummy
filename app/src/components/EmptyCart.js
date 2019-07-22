@@ -12,8 +12,8 @@ const EmpytCart = ({ text1, text2, image, btn, func, btntitle }) => (
         style={{ width: 100, height: 150 }}
       />
 
-      <Text style={{ fontWeight: "600", color: 'black' }}>{text1}</Text>
-      <Text>{text2}</Text>
+      <Text style={{ fontWeight: "600", color: 'black', textAlign:'center' }}>{text1}</Text>
+      <Text style={{textAlign:'center'}}>{text2}</Text>
     </View>
     {btn ? (
       <View>
