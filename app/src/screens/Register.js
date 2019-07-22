@@ -9,7 +9,7 @@ import {
   Alert,
   ActivityIndicator,
   ScrollView,
-  Linking, Platform
+  Linking, Platform, Dimensions
 } from "react-native";
 import { Icon, Toast, Root, Form, Picker } from "native-base";
 import { colors, Regions, api } from "../constants";
@@ -22,7 +22,7 @@ import {
   GraphRequestManager
 } from "react-native-fbsdk";
 import { apiFunctions } from "../constants/api";
-
+const SCREEN = Dimensions.get('screen')
 export default class Register extends Component {
   static navigationOptions = {
     title: "Sign Up"
@@ -214,11 +214,33 @@ export default class Register extends Component {
       });
   }
 
-  _terms = () => {
-    Linking.openURL(
-      "https://www.moscophones.com/index.php?route=information/information/info&information_id=3"
-    );
+  _terms = url => {
+    Linking.canOpenURL(url)
+            .then(supported => {
+                if (!supported) {
+                    Toast.show({text:"Install app to continue", duration:3000});
+                } else {
+                    return Linking.openURL(url);
+                }
+            })
+            .catch(error => {
+                Toast.show({text:"Error occured. Try again later", duration:3000});
+            });
   };
+
+  _privacy =(url)=> {
+    Linking.canOpenURL(url)
+            .then(supported => {
+                if (!supported) {
+                    Toast.show({text:"Install app to continue", duration:3000});
+                } else {
+                    return Linking.openURL(url);
+                }
+            })
+            .catch(error => {
+                Toast.show({text:"Error occured. Try again later", duration:3000});
+            });
+  }
 
   render() {
     return (
@@ -230,17 +252,26 @@ export default class Register extends Component {
               marginLeft: 30,
               marginRight: 30,
               marginTop: 10,
-              marginBottom: 10
+              marginBottom: 10,
             }}
           >
             <Text>
               By Pressing Sign Up or Continue with facebook, you agree with the
             </Text>
-            <TouchableOpacity onPress={this._terms}>
+
+            <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity onPress={() => this._terms(`https://www.moscophones.com/index.php?route=information/information&information_id=5`)}>
               <Text style={{ color: colors.primaryHeaderColor }}>
                 Terms of Service
               </Text>
             </TouchableOpacity>
+            <Text style={{marginLeft:5, marginRight: 5, color: 'black'}}>&</Text>
+            <TouchableOpacity onPress={() => this._privacy(`https://www.moscophones.com/index.php?route=information/information&information_id=3`)}>
+              <Text style={{ color: colors.primaryHeaderColor }}>
+               Privacy Policy
+              </Text>
+            </TouchableOpacity>
+          </View>
           </View>
 
           {/* Name */}
@@ -250,7 +281,8 @@ export default class Register extends Component {
             <View style={styles.inputbox}>
               <View style={{ flexDirection: "row" }}>
                 <View style={{ justifyContent: "center" }}>
-                  <Icon name="person" style={styles.iconStyle} />
+          <Icon name="user" style={styles.iconStyle}  type="Entypo" />
+
                 </View>
                 <TextInput
                   style={styles.formPlace}
@@ -284,7 +316,8 @@ export default class Register extends Component {
                 <Icon name="mail" style={styles.iconStyle} />
               </View>
               <TextInput
-                style={styles.formPlace}
+                style={{ fontSize: 16, paddingHorizontal: 10, width: SCREEN.width/ 1.5 }}
+
                 placeholder="Enter your email"
                 placeholderTextColor="#cccccc"
                 returnKeyType="next"
@@ -359,7 +392,7 @@ export default class Register extends Component {
                 </Text>
               </View>
               <TextInput
-                style={{ fontSize: 16, paddingHorizontal: 10, width: 300 }}
+                style={{ fontSize: 16, paddingHorizontal: 10, width: SCREEN.width/1.75 }}
                 placeholder="Enter phone number."
                 underlineColorAndroid="transparent"
                 placeholderTextColor="#cccccc"
@@ -625,7 +658,7 @@ const styles = StyleSheet.create({
   formPlace: {
     fontSize: 16,
     paddingHorizontal: 10,
-
+    width: SCREEN.width / 3.5
   },
   iconStyle: {
 
@@ -638,6 +671,8 @@ const styles = StyleSheet.create({
       },
       ios: {
         color: colors.primaryGrey,
+        height: 26,
+        width: 26,
       }
     })
     // marginTop: 10
