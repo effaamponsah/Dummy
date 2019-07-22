@@ -232,7 +232,8 @@ export default class Login extends Component {
           <View style={styles.inputbox}>
             <View style={{ flexDirection: "row" }}>
               <View style={{ justifyContent: "center" }}>
-                <Icon name="person" style={styles.iconStyle} />
+          <Icon name="user" style={styles.iconStyle}  type="Entypo" />
+
               </View>
               <TextInput
                 style={styles.formPlace}
@@ -275,7 +276,12 @@ export default class Login extends Component {
           <View style={styles.inputbox}>
             <View style={{ flexDirection: "row" }}>
               <View style={{ justifyContent: "center" }}>
-                <Icon name="lock" style={styles.iconStyle} />
+                <Icon name="lock" style={{
+                color: colors.primaryGrey,
+                height: 26,
+                width: 26,
+                marginLeft:5
+                }} />
               </View>
               <TextInput
                 style={styles.formPlace}
@@ -425,7 +431,7 @@ const styles = StyleSheet.create({
   formPlace: {
     fontSize: 16,
     paddingHorizontal: 10,
-    width: screen.width
+    width: screen.width / 1.5
   },
   iconStyle: {
     ...Platform.select({
@@ -436,7 +442,9 @@ const styles = StyleSheet.create({
         color: colors.primaryGrey
       },
       ios: {
-        color: colors.primaryGrey
+        color: colors.primaryGrey,
+        height: 26,
+        width: 26,
       }
     })
     // marginTop: 10
