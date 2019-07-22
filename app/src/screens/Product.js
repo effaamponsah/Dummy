@@ -133,7 +133,6 @@ export default class Product extends Component {
           this.setState(
             {
               data: r.data.data,
-              // images: r.data.data.imgages,
               isLoading: false
             },
             this.trial
@@ -177,7 +176,6 @@ export default class Product extends Component {
             } else {
               this.setState({ isVisible: false });
               Toast.show({ text: "Item previously added ", type: "danger" });
-              // Alert.alert("Oops", "Item previously added to wish list");
             }
           })
           .catch(() => {
@@ -203,7 +201,6 @@ export default class Product extends Component {
             product_id: id,
             quantity: 1,
             option: {
-              // 21: this.state.language
               [this.state.test]: this.state.language,
               [this.state.product_option_id2]: this.state
                 .product_option_value_id2
@@ -217,7 +214,6 @@ export default class Product extends Component {
             } else if (response.data.error.option) {
               this.setState({ isVisible: false });
               Toast.show({ text: "Select preffered options", type: "warning" });
-              // this.animteOptions();
     this.animteOptions()
 
 
@@ -228,7 +224,6 @@ export default class Product extends Component {
           })
           .catch(() => {
             this.setState({ nointernet: true, isLoading: false });
-            // Toast.show({text: "Ensure you have internet connection"})
           });
       }
     });
@@ -243,7 +238,6 @@ export default class Product extends Component {
         }
       })
       .then(response => {
-        // this.setState({ relatedData: response.data.data });
         if (response.data.data.length != 0) {
           this.setState({ relatedData: response.data.data });
         }
@@ -324,7 +318,7 @@ export default class Product extends Component {
                     {imgs.map((image, index) => (
                       <View style={{ height: SCREEN.height / 3 }} key={image}>
                         <Image
-                          style={{ width: SCREEN.width, height: 250 }}
+                          style={{ width: SCREEN.width, height: SCREEN.height / 3 }}
                           source={{ uri: image }}
                           resizeMode="contain"
                         />
@@ -523,7 +517,7 @@ export default class Product extends Component {
                 }}
               >
                 <ActivityIndicator size="small" />
-                <Text style={{ marginLeft: 20 }}>Please wait</Text>
+                <Text style={{ marginLeft: 20 }}>Adding......</Text>
               </View>
             </Overlay>
 
@@ -537,7 +531,8 @@ export default class Product extends Component {
                       alignItems: "center"
                     }}
                   >
-                    <Icon name="shopping-cart" style={{ color: colors.primaryGrey }} type='FontAwesome' />
+                    <Icon name="shoppingcart" style={{ color: colors.primaryGrey }}  type="AntDesign" />
+                    
                     <Text style={{ color: colors.primaryGrey }}>
                       Add to cart
                     </Text>
@@ -551,7 +546,8 @@ export default class Product extends Component {
                     }}
                     onPress={() => this._toCart(this.state.data.id)}
                   >
-                    <Icon name="cart" style={{ color: colors.primaryBlue }} />
+                    <Icon name="shoppingcart" style={{ color: colors.primaryBlue }}  type="AntDesign" />
+
                     <Text>Add to cart</Text>
                   </TouchableOpacity>
                 )}
