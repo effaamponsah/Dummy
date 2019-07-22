@@ -133,7 +133,7 @@ export default class WishlistItems extends Component {
         <View style={styles.container}>
           <EmpytCart
             text1="Your Wishlist is Empty"
-            text2="Hit the love icon from the products page "
+            text2="Hit the love icon from the products page to add some"
             image={img}
           />
         </View>
