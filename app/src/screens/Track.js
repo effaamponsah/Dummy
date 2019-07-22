@@ -253,7 +253,7 @@ export default class Track extends Component {
         {/* Overlay */}
         <Overlay
           isVisible={isVisible}
-          height={140}
+          height={160}
           //   onBackdropPress={() => this.setState({ isVisible: false })}
           containerStyle={{
             flex: 1,
@@ -273,7 +273,7 @@ export default class Track extends Component {
             
           </View> */}
           <View>
-            <Text style={{ marginLeft: 10 }}>{error}</Text>
+            <Text style={{ marginLeft: 10, textAlign: 'center' }}>{error}</Text>
             <Form>
               <Item underline={false}>
                 {/* <Label>Order Id</Label> */}
