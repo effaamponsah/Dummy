@@ -9,7 +9,7 @@ import {
     Button,
     TouchableOpacity
 } from "react-native";
-import { Icon } from "native-base";
+import { Icon, Toast, Root } from "native-base";
 import { colors } from "../constants";
 
 export default class About extends Component {
@@ -25,7 +25,7 @@ export default class About extends Component {
         Linking.canOpenURL(url)
             .then(supported => {
                 if (!supported) {
-                    ToastAndroid.show("Cant handle it");
+                    Toast.show({text:"Install app to continue", duration:3000});
                 } else {
                     return Linking.openURL(url);
                 }
@@ -38,7 +38,8 @@ export default class About extends Component {
         Linking.canOpenURL(url)
             .then(supported => {
                 if (!supported) {
-                    ToastAndroid.show("Cant handle it");
+                    Toast.show({text:"Install app to continue", duration:3000});
+
                 } else {
                     return Linking.openURL(url);
                 }
@@ -51,7 +52,9 @@ export default class About extends Component {
         Linking.canOpenURL(url)
             .then(supported => {
                 if (!supported) {
-                    ToastAndroid.show("Cant handle it");
+                    Toast.show({text:"Install app to continue", duration:3000});
+
+
                 } else {
                     return Linking.openURL(url);
                 }
@@ -63,6 +66,8 @@ export default class About extends Component {
 
     render() {
         return (
+            <Root>
+
             <View style={styles.container}>
                 <Text
                     style={{
@@ -118,6 +123,7 @@ export default class About extends Component {
                     </TouchableOpacity>
                 </View>
             </View>
+            </Root>
         );
     }
 }
