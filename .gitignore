@@ -57,3 +57,4 @@ buck-out/
 
 #temporary files
 something/
+package-lock.json
