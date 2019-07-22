@@ -8,7 +8,7 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
-  BackHandler
+SegmentedControlIOS
 } from "react-native";
 import { colors } from "../constants";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -21,35 +21,25 @@ const err = () => {
   console.warn("Error");
 };
 const portals = "https://www.portals.moscophones.com";
-
+const chat ="https://tawk.to/chat/5d0c948753d10a56bd7b2a2e/default";
+const repairs ='http://repairs.moscophones.com/'
 export class Repairs extends Component {
   static navigationOptions = {
-    // header: null
-    title: "Web Portals"
-    // headerRight: (
-    //   <TouchableOpacity onPress={() => }>
-    //     <Icon name="refresh" />
-    //   </TouchableOpacity>
-    // )
+    title: "Web Portal"
+    
   };
   constructor(props) {
     super(props);
     this.state = {
       showbtn: false,
       error: false,
-      canGoForward: false
+      canGoForward: false,
+      selectedIndex:0
      
     };
   }
 
-  componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.handleBack);
-
-  }
-  componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress", this.handleBack);
-  }
-
+  
   handleBack = () => {
     if (this.state.canGoBack) {
       this.refWeb.goBack();
@@ -65,41 +55,55 @@ export class Repairs extends Component {
   error = () => {
     this.setState({ error: true });
   };
-  onNavigationStateChange(navState) {
-    this.setState({
-      canGoBack: navState.canGoBack
-    });
-  }
+ 
  
   render() {
     let WebViewRef;
     return (
-      //<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      // {/* <ScrollView */}
-      //   refreshControl={
-      //     <RefreshControl
-      //       // refreshing={this.state.refreshing}
-      //       onRefresh={() => {
-      //         WebViewRef && WebViewRef.reload();
-      //       }}
-      //       colors={[colors.primaryBlue]}
-      //       title="Reloading"
-      //     />
-      //   }
-      //>
-      <View style={{ flex: 1 }}>
+     <View style={{flex:1}}>
+      <View style={{margin:15}}>
+       <SegmentedControlIOS
+        values={['Customer Care', 'Check Repairs']}
+        selectedIndex={this.state.selectedIndex}
+        onChange={(event) => {
+        this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
+         }}
+         tintColor={colors.primaryBlue}
+        />
+      </View>
+
+      {
+        this.state.selectedIndex == 0?
         <WebView
-          // ref={WEBVIEW_REF => (WebViewRef = WEBVIEW_REF)}
           ref={myWeb => (this.refWeb = myWeb)}
-          source={{ uri: portals }}
-          // style={{ marginTop }}
-          // onLoadStart={me}
+          source={{ uri: chat }}
           onError={this.error}
           startInLoadingState={true}
           javaScriptEnabled={true}
-          // onLoadEnd={e => console.warn("This is it", e)}
-          // renderError={e => <Text>{e}</Text>}
-          onNavigationStateChange={this.onNavigationStateChange.bind(this)}
+         renderLoading={() => (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <ActivityIndicator />
+            </View>
+          )}
+        />
+
+        :null
+      }
+
+      {
+        this.state.selectedIndex == 1?
+        <WebView
+          ref={myWeb => (this.refWeb = myWeb)}
+          source={{ uri: repairs }}
+          onError={this.error}
+          startInLoadingState={true}
+          javaScriptEnabled={true}
           renderLoading={() => (
             <View
               style={{
@@ -112,20 +116,11 @@ export class Repairs extends Component {
             </View>
           )}
         />
-        {/* {this.state.error ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <TouchableOpacity
-              onPress={this.reload}
-              style={{ padding: 10, backgroundColor: colors.primaryBlue }}
-            >
-              <Text style={{ color: colors.white }}>Retry</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null} */}
+
+        :null
+      }     
+
       </View>
-      //</ScrollView>
     );
   }
 }
