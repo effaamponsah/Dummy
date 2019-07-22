@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   NetInfo,
   ActivityIndicator,
-  Alert
+  Alert, Dimensions, RefreshControl
 } from "react-native";
 import SlideShow from "../components/Slideshow";
 import Categories from "../components/Categories";
@@ -23,7 +23,7 @@ import NavigationService from "../navigation/NavigationService";
 import NoInternet from "./NoConnection";
 import Foryou from "../components/Foryou";
 import { inject, observer } from "mobx-react/native";
-
+const SCREEN = Dimensions.get('window')
 @inject("shoppingcartstore")
 @observer
 export default class HomeScreen extends Component {
@@ -110,7 +110,7 @@ export default class HomeScreen extends Component {
       <View style={{ backgroundColor: colors.primaryBackground }}>
         <ScrollView>
           <StatusBar barStyle={"default"} backgroundColor={colors.darkgreen} />
-          <View style={{ height: 200 }}>
+          <View style={{ height: SCREEN.height/3 }}>
             <SlideShow />
           </View>
           <View>

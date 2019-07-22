@@ -79,25 +79,6 @@ export default class Categories extends Component {
 
   componentDidMount = () => {
     this._isMounted = true;
-    // this.fetch();
-    // axios
-    //   .get(api.newCat)
-    //   .then(r => {
-    //     if (this._isMounted) {
-    //       this.setState({
-    //         isLoading: false,
-    //         data: r.data.data
-    //       });
-    //     }
-    //   })
-    //   .catch(e => {
-    //     console.log("Error", e);
-    //   });
-    // console.log("This is props", this.props);
-
-    // this.retrieve();
-
-    //
     NetInfo.getConnectionInfo().then(connection => {
       if (connection.type == "none") {
         this.retrieve();
@@ -122,8 +103,7 @@ export default class Categories extends Component {
         }
       })
       .catch(e => {
-        //  console.warn("Error", e);
-        //falls back to the set data
+       
         this.retrieve();
       });
   }
@@ -131,7 +111,6 @@ export default class Categories extends Component {
   async set(x) {
     try {
       await AsyncStorage.setItem("CATEGORY_DATA", JSON.stringify(x));
-      // await this.setState({data: x})
     } catch (error) {
       Alert.alert("Error setting data");
     }
@@ -141,16 +120,13 @@ export default class Categories extends Component {
     try {
       const value = await AsyncStorage.getItem("CATEGORY_DATA");
       if (value !== null) {
-        // Alert.alert("We have data");
-        //log and set state here if everything works
+        
         this.setState({
           data: JSON.parse(value),
           isLoading: false
         });
-        //  console.warn(value);
       } else {
-        // Alert.alert("We have no data");
-        //  this.setState({isLoading: false})
+
         this.fetch();
       }
     } catch (error) {
@@ -159,13 +135,7 @@ export default class Categories extends Component {
   }
 
   render() {
-    // if (this.state.isLoading) {
-    //   return (
-    //     <View style={styles.container}>
-    //       <ActivityIndicator color={colors.primaryBlue} />
-    //     </View>
-    //   );
-    // }
+   
     return (
       <View style={styles.container}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>

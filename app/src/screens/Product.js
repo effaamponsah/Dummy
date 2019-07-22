@@ -3,34 +3,28 @@ import {
   View,
   Text,
   StyleSheet,
-  //Image,
   Button,
   Alert,
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  // Picker,
   NetInfo,
   Animated,
   Dimensions,
   Easing
 } from "react-native";
-import Slider from "../components/Slider";
 import { api, colors } from "../constants";
 import { Icon, Accordion, Root, Toast, Picker } from "native-base";
 import { observer, inject } from "mobx-react/native";
 import InformationData from "../components/InformationData";
 import axios from "axios";
-import CardItems from "../components/Card";
 import { Overlay, Rating, Image } from "react-native-elements";
-import ProductSlider from "../components/ProductSlider";
 import EmpytCart from "../components/EmptyCart";
 import Related from "../components/Related";
 import Placeholder from "../components/Placeholder";
 const img = require("../../assets/images/internet.png");
-
-
-const deviceWidth = Dimensions.get("window").width;
+const imgs = [];
+const SCREEN = Dimensions.get("window");
 const FIXED_BAR_WIDTH = 100;
 const BAR_SPACE = 10;
 
@@ -73,7 +67,8 @@ export default class Product extends Component {
       nointernet: false,
       optionp2: "",
       relatedData: "",
-      myArray:[]
+      product_option_id2: "",
+      product_option_value_id2: ""
     };
     this.animatedValue = new Animated.Value(0);
   }
@@ -125,10 +120,20 @@ export default class Product extends Component {
       })
       .then(r => {
         if (this._isMounted) {
+          if (r.data.data.images.length > 0) {
+            imgs.length = 0;
+            imgs.push(r.data.data.image);
+            for (let i = 0; i < r.data.data.images.length; i++) {
+              imgs.push(r.data.data.images[i]);
+            }
+          } else {
+            imgs.length = 0;
+            imgs.push(r.data.data.image);
+          }
           this.setState(
             {
               data: r.data.data,
-              images: r.data.data.imgages,
+              // images: r.data.data.imgages,
               isLoading: false
             },
             this.trial
@@ -136,22 +141,21 @@ export default class Product extends Component {
         }
       })
       .catch(e => {
-        Alert.alert("Oops", e);
+        this.setState({ nointernet: true, isLoading: false });
       });
   }
 
   trial() {
-    if (this.state.data.options.length > 0) {
+    if (this.state.data.options.length == 1) {
       this.setState({ test: this.state.data.options[0].product_option_id });
-    // this.setState({ combinedimgs: [...this.state.images, this.state.data.image] })
-    // this.setState(data => ({
-    //   myArray: [...data.images, "new value"]
-    // }))
+    }
+    if (this.state.data.options.length == 2) {
+      this.setState({
+        test: this.state.data.options[0].product_option_id,
+        product_option_id2: this.state.data.options[1].product_option_id
+      });
     }
   }
-
-  // moscoman(){
-  // }
 
   _addToWishList = () => {
     this.setState({ isVisible: true });
@@ -176,15 +180,14 @@ export default class Product extends Component {
               // Alert.alert("Oops", "Item previously added to wish list");
             }
           })
-          .catch(e => {
-            Alert.alert("Error", e);
+          .catch(() => {
+            this.setState({ nointernet: true, isLoading: false });
           });
       }
     });
   };
 
   _toCart(id) {
-    // let m = this.state.product_option_id;
     this.setState({ isVisible: true });
     NetInfo.getConnectionInfo().then(connection => {
       if (connection.type == "none") {
@@ -201,7 +204,9 @@ export default class Product extends Component {
             quantity: 1,
             option: {
               // 21: this.state.language
-              [this.state.test]: this.state.language
+              [this.state.test]: this.state.language,
+              [this.state.product_option_id2]: this.state
+                .product_option_value_id2
             }
           })
           .then(response => {
@@ -218,11 +223,12 @@ export default class Product extends Component {
 
             } else {
               this.setState({ isVisible: false });
-              Alert.alert("Oops", "This is strange");
+              Alert.alert("Oops", "This is strange, try again");
             }
           })
-          .catch(error => {
-            Alert.alert("Oops", error);
+          .catch(() => {
+            this.setState({ nointernet: true, isLoading: false });
+            // Toast.show({text: "Ensure you have internet connection"})
           });
       }
     });
@@ -239,12 +245,11 @@ export default class Product extends Component {
       .then(response => {
         // this.setState({ relatedData: response.data.data });
         if (response.data.data.length != 0) {
-          console.warn("Related products found");
           this.setState({ relatedData: response.data.data });
         }
       })
-      .catch(error => {
-        console.warn("Unable to fetch the data");
+      .catch(() => {
+        // alert("Error occured");
       });
   }
 
@@ -263,7 +268,6 @@ export default class Product extends Component {
 
   render() {
     const id = this.props.navigation.getParam("id", "no id");
-    console.warn(this.state.myArray)
     if (this.state.isLoading) {
       return (
         <View
@@ -307,19 +311,7 @@ export default class Product extends Component {
 
           <View>
             <View style={styles.container2} flex={1}>
-              {this.state.data.images.length == 0 ? (
-                <Image
-                  source={{ uri: this.state.data.image }}
-                  // style={styles.imageStyle}
-                  style={{ width: deviceWidth, height: 250 }}
-                  // PlaceholderContent={
-                  //     <ActivityIndicator
-                  //       size="small"
-                  //     />
-                  //   }
-                />
-              ) : (
-                  <ScrollView
+             <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     scrollEventThrottle={10}
@@ -329,14 +321,12 @@ export default class Product extends Component {
                     ])}
                   >
                     {/* {imageArray} */}
-                    {this.state.data.images.map((image, index) => (
-                      <View style={{ marginTop: 10 }}>
+                    {imgs.map((image, index) => (
+                      <View style={{ height: SCREEN.height / 3 }} key={image}>
                         <Image
-                          style={{ width: deviceWidth, height: 250 }}
+                          style={{ width: SCREEN.width, height: 250 }}
                           source={{ uri: image }}
                           resizeMode="contain"
-                          onLoadStart={() => console.warn("Loading image")}
-                          onLoadEnd={() => console.warn("Loading Done")}
                         />
 
                         <View
@@ -355,13 +345,12 @@ export default class Product extends Component {
                           }}
                         >
                           <Text style={{ color: "white" }}>
-                            {index + 1} / {this.state.data.images.length}
+                            {index + 1} / {imgs.length}
                           </Text>
                         </View>
                       </View>
                     ))}
                   </ScrollView>
-                )}
             </View>
 
             <Animated.View
@@ -379,33 +368,96 @@ export default class Product extends Component {
                 }}
                 
               >
-              {this.state.data.options.length > 0 ? (
-                <View>
-                  {this.state.data.options.map((d, i) => (
+             {this.state.data.options.length == 1 ? (
+                  <View>
+                    {/* {this.state.data.options.map((d, i) => ( */}
                     <View>
-                      <Text>{d.name}</Text>
+                      <Text stye={{ color: "black" }}>
+                        {this.state.data.options[0].name}
+                      </Text>
                       <View>
                         <Picker
                           selectedValue={this.state.language}
-                          style={{ height: 50, width: 100 }}
-                          onValueChange={(itemValue, itemIndex) =>
+                          style={{ height: 50, width: SCREEN.width }}
+                          onValueChange={(itemValue) =>
                             this.setState({ language: itemValue })
                           }
                         >
-                          <Picker.Item label="Select one" value="" />
-                          {d.option_value.map(m => (
+                          <Picker.Item
+                            label="Select preferred option"
+                            value=""
+                          />
+                          {this.state.data.options[0].option_value.map(m => (
                             <Picker.Item
+                              key={m.name}
                               label={m.name}
                               value={m.product_option_value_id}
-                              key={m.name}
                             />
                           ))}
                         </Picker>
                       </View>
                     </View>
-                  ))}
-                </View>
-              ) : null}
+                    {/* ))} */}
+                  </View>
+                ) : null}
+                {this.state.data.options.length == 2 ? (
+                  <View>
+                    <View>
+                      <Text stye={{ color: "black" }}>
+                        {this.state.data.options[0].name}
+                      </Text>
+                      <View>
+                        <Picker
+                          selectedValue={this.state.language}
+                          style={{ height: 50, width: SCREEN.width }}
+                          onValueChange={(itemValue) =>
+                            this.setState({ language: itemValue })
+                          }
+                        >
+                          <Picker.Item
+                            label="Select preferred option"
+                            value=""
+                          />
+                          {this.state.data.options[0].option_value.map(m => (
+                            <Picker.Item
+                              key={m.name}
+                              label={m.name}
+                              value={m.product_option_value_id}
+                            />
+                          ))}
+                        </Picker>
+                      </View>
+                    </View>
+                    <View>
+                      <Text stye={{ color: "black" }}>
+                        {this.state.data.options[1].name}
+                      </Text>
+                      <View>
+                        <Picker
+                          selectedValue={this.state.product_option_value_id2}
+                          style={{ height: 50, width: SCREEN.width }}
+                          onValueChange={(itemValue) =>
+                            this.setState({
+                              product_option_value_id2: itemValue
+                            })
+                          }
+                        >
+                          <Picker.Item
+                            label="Select preferred option"
+                            value=""
+                          />
+                          {this.state.data.options[1].option_value.map(m => (
+                            <Picker.Item
+                              key={m.name}
+                              label={m.name}
+                              value={m.product_option_value_id}
+                            />
+                          ))}
+                        </Picker>
+                      </View>
+                    </View>
+                  </View>
+                ) : null}
               </Animated.View>
 
             <View style={{ padding: 15 }}>
@@ -525,7 +577,7 @@ export default class Product extends Component {
           </View>
 
           {/* Information */}
-          <View style={styles.metaDataContainer}>
+          {/* <View style={styles.metaDataContainer}>
             <View style={styles.metaDataHeader}>
               <Icon name="settings" style={{ color: colors.primaryBlue }} />
               <Text
@@ -559,7 +611,7 @@ export default class Product extends Component {
               data={this.state.data.height}
               units={this.state.data.length_class}
             />
-          </View>
+          </View> */}
 
           {/* Reviews */}
           <View style={styles.metaDataContainer}>
@@ -602,7 +654,7 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     height: 250,
-    width: deviceWidth,
+    width: SCREEN.width,
     justifyContent: "center",
     alignItems: "center"
   },

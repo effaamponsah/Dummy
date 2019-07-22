@@ -15,6 +15,7 @@ import History from "../screens/History";
 import About from "../screens/About";
 import PasswordUpdate from "../screens/PasswordUpdate";
 import AddressEdit from "../screens/AddressEdit";
+import Done from '../screens/Thankyou'
 // export default (ProfileNav = createStackNavigator(
 //   {
 //     Profile: Profile,
@@ -40,7 +41,8 @@ const AccountStack = createStackNavigator(
     History: History,
     About: About,
     PasswordUpdate: PasswordUpdate,
-    AddressEdit: AddressEdit
+    AddressEdit: AddressEdit,
+    Done: Done
   },
   {
     defaultNavigationOptions: {

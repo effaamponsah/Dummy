@@ -10,9 +10,11 @@ import {
   ActivityIndicator
 } from "react-native";
 import axios from "axios";
-import { api, colors } from "../constants";
+import { api, colors, headerimg } from "../constants";
 import SubCartItems from "../components/SubCartItems";
-
+import EmpytCart from "../components/EmptyCart";
+const img = require("../../assets/images/internet.png");
+let headerimage;
 const screen = Dimensions.get("screen");
 export default class SubCategories extends Component {
   _isMounted = false;
@@ -28,7 +30,9 @@ export default class SubCategories extends Component {
     super(props);
     this.state = {
       data: [],
-      isLoading: true
+      isLoading: true,
+      nointernet: false,
+      headerimg: ""
     };
   }
 
@@ -36,6 +40,26 @@ export default class SubCategories extends Component {
     const id = this.props.navigation.getParam("id", "no id provided");
     this._isMounted = true;
     this.fetchdata(id);
+    const header = this.props.navigation.getParam("title", "Rest");
+    // console.warn(header);
+
+    switch (header) {
+      case "Mobile Phones":
+        headerimage = headerimg["Mobile Phones"];
+        break;
+      case "Accessories":
+        headerimage = headerimg.Assesories;
+        break;
+      case "Laptops":
+        headerimage = headerimg.Laptops;
+        break;
+      case "Tablets":
+        headerimage = headerimg.Tablets;
+        break;
+      default:
+        headerimage = headerimg.Other;
+        break;
+    }
   }
 
   fetchdata = i => {
@@ -74,7 +98,16 @@ export default class SubCategories extends Component {
   };
   keyExtractor = item => String(item.id);
   seperator = () => <View style={styles.seperator} />;
-
+  retryPress = () => {
+    const id = this.props.navigation.getParam("id", "no id");
+    NetInfo.getConnectionInfo().then(connection => {
+      if (connection.type == "none") {
+      } else {
+        this.setState({ isLoading: true, nointernet: false });
+        this.fetchdata(id);
+      }
+    });
+  };
   render() {
     if (this.state.isLoading) {
       return (
@@ -85,12 +118,30 @@ export default class SubCategories extends Component {
         </View>
       );
     }
+    if (this.state.nointernet) {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <EmpytCart
+            text1="It appears you dont have internet connection"
+            text2="Connect to the internet and try again"
+            btn
+            func={this.retryPress}
+            btntitle="Retry"
+            image={img}
+          />
+        </View>
+      );
+    }
     return (
       <ScrollView>
         <View style={{ marginRight: 10 }}>
           <Image
-            source={require("../../assets/images/temp.jpg")}
-            style={{ height: 250, width: screen.width }}
+            // source={require("../../assets/images/temp.jpg")}
+            source={headerimage}
+
+            style={{ height: screen.height / 3, width: screen.width }}
           />
         </View>
         <View style={{ padding: 10, marginTop: 5, borderRadius: 10 }}>

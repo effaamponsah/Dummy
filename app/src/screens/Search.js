@@ -36,7 +36,9 @@ export default class Search extends Component {
       loading: false,
       data: [],
       word: "earphone",
-      displayEmpty: true
+      displayEmpty: true,
+      nointernet: false
+
     };
 
     this.arrayHolder = [];
@@ -62,27 +64,20 @@ export default class Search extends Component {
       loading: true
     });
     NetInfo.getConnectionInfo().then(connection => {
-      if (connection.type == "none") {
-        this.setState({ loading: false, displayEmpty: true });
-        Toast.show({
-          text: "Connect to the internet and try again",
-          type: "danger",
-          buttonText: "Okay"
-        });
-      } else {
-        axios
-          .get(api.search + x)
-          .then(response => {
-            this.setState({
-              data: response.data.data,
-              loading: false
-            });
-            // console.warn(this.state.data);
-          })
-          .catch(e => {
-            console.warn("Error oo", e);
+      axios
+        .get(api.search + x)
+        .then(response => {
+          this.setState({
+            data: response.data.data,
+            loading: false
           });
-      }
+          // console.warn(this.state.data);
+        })
+        .catch(e => {
+          // console.warn("Error oo", e);
+          this.setState({ nointernet: true, isLoading: false });
+        });
+      // }
     });
   }
 
@@ -115,7 +110,7 @@ export default class Search extends Component {
               }}
             >
               <ActivityIndicator size="large" />
-              <Text style={{ marginLeft: 20 }}>Loading</Text>
+              <Text style={{ marginLeft: 20 }}>Looking for your item</Text>
             </View>
           </Overlay>
         ) : null}
@@ -165,6 +160,7 @@ export default class Search extends Component {
         <ScrollView>
           {this.state.data.map((d, i) => (
             <TouchableOpacity
+            key= {d.name}
               onPress={() =>
                 // NavigationService.navigate("Product", {
                 //   title: d.name,
@@ -247,6 +243,34 @@ export default class Search extends Component {
 
           </View>
         </Root>
+      );
+    }
+    if (this.state.nointernet) {
+      return (
+        // <View
+        //   style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        // >
+        //   <Text>
+        //     It appears you dont have a stable connection with our
+        //     servers. Connect to the internet and try again
+        //   </Text>
+        // </View>
+        <View style={{ flex: 1 }}>
+          {this._renderHeader()}
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <EmpytCart
+              text1="It appears you dont have internet connection"
+              text2="Connect to the internet and try again"
+              // btn
+              // func={this.retryPress}
+              // btntitle="Retry"
+              image={nointernetimg}
+            />
+            {/* <Button title="Retry" onPress={() => this.retryPress()} /> */}
+          </View>
+        </View>
       );
     }
     return (

@@ -121,10 +121,10 @@ export const AccountPageLinks = [
     title: "Wish list",
     icon: (
       <Icon
-        name="heart"
-        style={{ color: colors.primaryGrey }}
-        type="MaterialCommunityIcons"
-      />
+      name="hearto"
+      style={{ color: colors.primaryGrey }}
+      type="AntDesign"
+    />
     )
   },
   {
@@ -134,7 +134,7 @@ export const AccountPageLinks = [
       <Icon
         name="book"
         style={{ color: colors.primaryGrey }}
-        type="MaterialCommunityIcons"
+        type="AntDesign"
       />
     )
   },
@@ -143,9 +143,9 @@ export const AccountPageLinks = [
     title: "Track your orders",
     icon: (
       <Icon
-        name="car-connected"
+        name="track-changes"
         style={{ color: colors.primaryGrey }}
-        type="MaterialCommunityIcons"
+        type="MaterialIcons"
       />
     )
   },
@@ -154,10 +154,10 @@ export const AccountPageLinks = [
     title: "Edit Personal Information",
     icon: (
       <Icon
-        name="settings"
-        style={{ color: colors.primaryGrey }}
-        type="MaterialIcons"
-      />
+      name="setting"
+      style={{ color: colors.primaryGrey }}
+      type="AntDesign"
+    />
     )
   },
   {
@@ -165,9 +165,9 @@ export const AccountPageLinks = [
     title: "Update Password",
     icon: (
       <Icon
-        name="lock"
+        name="unlock"
         style={{ color: colors.primaryGrey }}
-        type="MaterialCommunityIcons"
+        type="AntDesign"
       />
     )
   },
@@ -187,7 +187,7 @@ export const AccountPageLinks = [
     title: "About App",
     icon: (
       <Icon
-        name="information"
+        name="information-outline"
         style={{ color: colors.primaryGrey }}
         type="MaterialCommunityIcons"
       />

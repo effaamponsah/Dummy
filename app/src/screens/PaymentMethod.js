@@ -6,15 +6,16 @@ import {
   Alert,
   ActivityIndicator,
   Button,
-  Dimensions
+  Dimensions,
+  ToastAndroid
 } from "react-native";
 import axios from "axios";
 import { api, colors } from "../constants";
-// import { Object } from "core-js";
 import { ListItem, Body, Right, Radio } from "native-base";
 import { Overlay } from "react-native-elements";
 import NavigationService from "../navigation/NavigationService";
 import Confirm from "./Confirm";
+import PrimaryButton from "../components/PrimaryButton";
 const dimension = Dimensions.get("window");
 export default class PaymentMethod extends Component {
   static navigationOptions = {
@@ -54,7 +55,7 @@ export default class PaymentMethod extends Component {
           this.setState({ methods: data, isLoading: false });
           // }
         } else {
-          console.warn(response.data);
+          // console.warn(response.data);
         }
       })
       .catch(error => {
@@ -78,53 +79,38 @@ export default class PaymentMethod extends Component {
       });
   }
 
-  confirm() {
+  confirm = () => {
     axios
       .post(api.confirm)
       .then(response => {
-        console.warn(response.data);
+        // console.warn(response.data);
         if (response.data.success == true) {
           this.setState({
             invoice: response.data.data,
             products: response.data.data.products,
             totals: response.data.data.totals,
-            isVisible: true
+            // /isVisible: true
+          });
+          NavigationService.navigate("Confirm", {
+            invoice: response.data.data,
+            products: response.data.data.products,
+            totals: response.data.data.totals,
+            method: response.data.data.payment_method
+            // />
           });
         }
       })
       .catch(error => {
-        console.warn("Error occured", error);
+        // console.warn("Error occured", error);
+        ToastAndroid.show("Connect to the internet and try again", 3000);
       });
-  }
+  };
 
   componentWillUnmount() {
     this._isMounted = false;
   }
 
-  showOverview() { }
-
-  // handleCheckout(x) {
-  //   if (x == "MTN Mobile Money") {
-  //     Alert.alert("Please wait", "We are processing the mobile money payment");
-  //   } else {
-  //     axios
-  //       .put(api.confirm)
-  //       .then(response => {
-  //         if (response.data.success == true) {
-  //           Alert.alert(
-  //             "Success",
-  //             "Order placed successfully. Check your email for the order id"
-  //           );
-  //           NavigationService.navigate("Home");
-  //         } else {
-  //           Alert.alert("Error", "Error placing order. Please try again");
-  //         }
-  //       })
-  //       .catch(error => {
-  //         Alert.alert("Error occured", "");
-  //       });
-  //   }
-  // }
+  showOverview() {}
 
   render() {
     const {
@@ -142,7 +128,7 @@ export default class PaymentMethod extends Component {
         >
           <ActivityIndicator
             color={{ color: colors.primaryBlue }}
-            size="small"
+            size="large"
           />
         </View>
       );
@@ -170,14 +156,8 @@ export default class PaymentMethod extends Component {
           ))}
         </View>
 
-        <View style={{ marginLeft: 30, marginRight: 30, marginTop: 20 }}>
-          <Button
-            title="Confirm"
-            color={colors.primaryBlue}
-            onPress={() => this.confirm()}
-          >
-            {/* <Text style={{ color: "white" }}>Proceed</Text> */}
-          </Button>
+        <View>
+          <PrimaryButton btntitle="Confirm" func={this.confirm} />
         </View>
 
         {/* Invoice */}

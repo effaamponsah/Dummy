@@ -182,6 +182,7 @@ export default class Cart extends Component {
             text2="Please add items"
             image={img}
             btn
+            btntitle="Start shopping"
           />
         </View>
       );

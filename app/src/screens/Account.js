@@ -11,7 +11,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import { apiFunctions } from "../constants/api";
-import { colors, api } from "../constants";
+import { colors, api, AccountPageLinks } from "../constants";
 import axios from "axios";
 import { Accordion, Icon } from "native-base";
 import AccountLinks from "../components/AccountLinks";
@@ -19,74 +19,6 @@ import { LoginManager } from "react-native-fbsdk";
 import { inject } from "mobx-react/native";
 import { Avatar } from "react-native-elements";
 
-const data = [
-  {
-    link: "WishList",
-    title: "Wish list",
-    icon: (
-      <Icon
-        name="hearto"
-        style={{ color: colors.primaryGrey }}
-        type="AntDesign"
-      />
-    )
-  },
-  {
-    link: "History",
-    title: "Order History",
-    icon: (
-      <Icon
-        name="book"
-        style={{ color: colors.primaryGrey }}
-        type="AntDesign"
-      />
-    )
-  },
-  {
-    link: "Track",
-    title: "Track your orders",
-    icon: (
-      <Icon
-        name="car"
-        style={{ color: colors.primaryGrey }}
-        type="MaterialCommunityIcons"
-      />
-    )
-  },
-  {
-    link: "Settings",
-    title: "Personal Information",
-    icon: (
-      <Icon
-        name="setting"
-        style={{ color: colors.primaryGrey }}
-        type="AntDesign"
-      />
-    )
-  },
-  {
-    link: "Share",
-    title: "Share App",
-    icon: (
-      <Icon
-        name="sharealt"
-        style={{ color: colors.primaryGrey }}
-        type="AntDesign"
-      />
-    )
-  },
-  {
-    link: "About",
-    title: "About App",
-    icon: (
-      <Icon
-        name="ios-information-circle-outline"
-        style={{ color: colors.primaryGrey }}
-        type="Ionicons"
-      />
-    )
-  }
-];
 
 @inject("shoppingcartstore")
 export default class Account extends Component {
@@ -94,6 +26,7 @@ export default class Account extends Component {
   static navigationOptions = {
     title: "My Account"
   };
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -214,7 +147,7 @@ export default class Account extends Component {
         </View>
 
         {/* List */}
-        {data.map(data => (
+        {AccountPageLinks.map(data => (
           <AccountLinks key={data.title} link={data.link}>
             <AccountLinks.Left>
               <View style={{ flexDirection: "row", alignItems: "center" }}>

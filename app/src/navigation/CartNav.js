@@ -9,8 +9,7 @@ import GuestUser from "../screens/GuestUser";
 import GuestDetails from "../screens/GuestDetails";
 import GuestShipping from "../screens/GuestShipping";
 import Confirm from "../screens/Confirm";
-import Thankyou from "../screens/Thankyou";
-
+import Done from "../screens/Thankyou";
 export default (CartStack = createStackNavigator(
     {
         Cart: Cart,
@@ -18,12 +17,12 @@ export default (CartStack = createStackNavigator(
         PaymentAddress: PaymentAddress,
         ShippingAddress: ShippingAddress,
         PaymentMethod: PaymentMethod,
+        Done: Done,
         ShippingMethod: ShippingMethods,
         Guest: GuestUser,
         GuestDetails: GuestDetails,
         GuestShipping: GuestShipping,
         Confirm: Confirm,
-        Thankyou: Thankyou
     },
     {
         defaultNavigationOptions: {

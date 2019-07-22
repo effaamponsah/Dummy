@@ -91,7 +91,7 @@ const Tab = createBottomTabNavigator(
         )
       })
     },
-    Repairs: {
+    Portals: {
       screen: RepairsNav,
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
@@ -110,7 +110,7 @@ const Tab = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      activeTintColor: colors.primaryHeaderColor,
+      activeTintColor: colors.primaryBlue,
       inactiveTintColor: colors.primaryGrey
     }
   }

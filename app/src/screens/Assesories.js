@@ -88,8 +88,10 @@ export default class Anomally extends Component {
           <ScrollView>
             <View style={{ marginRight: 10 }}>
               <Image
-                source={require("../../assets/images/temp.jpg")}
-                style={{ height: 250, width: screen.width }}
+                // source={require("../../assets/images/temp.jpg")}
+                source={require("../../assets/images/others.jpg")}
+
+                style={{ height: screen.height /3, width: screen.width }}
               />
             </View>
             <View style={{ padding: 10, marginTop: 5 }}>

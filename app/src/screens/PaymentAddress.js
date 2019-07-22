@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Alert,
   NetInfo,
-  ToastAndroid,
+  // ToastAndroid,
   TextInput
 } from "react-native";
 import axios from "axios";
@@ -58,13 +58,14 @@ export default class PaymentAddress extends Component {
   }
   handlePress() {
     if (this.state.activeShippingAddress == "" || this.state.shippingAddresses == "") {
-      ToastAndroid.show("Please select all addresses", 4000);
+      Toast.show({text: "Please select all addresses", type:'warning', duration: 3000});
     } else {
       this.props.navigation.navigate("ShippingMethod");
     }
   }
   renderCheckout() {
     return (
+      <Root>
       <View
         style={{
           borderTopWidth: StyleSheet.hairlineWidth,
@@ -91,6 +92,7 @@ export default class PaymentAddress extends Component {
           <Text style={{ color: "white" }}>Proceed to Shipping</Text>
         </TouchableOpacity>
       </View>
+      </Root>
     );
   }
 
@@ -148,10 +150,11 @@ export default class PaymentAddress extends Component {
   setExistingShippingAddress(address_id) {
     NetInfo.getConnectionInfo().then(connection => {
       if (connection.type == "none") {
-        ToastAndroid.show(
-          "Please check your internet connection and try again",
-          2000
-        );
+        Toast.show({
+          text: "Please check your internet connection and try again",
+          duration:3000,
+          type:'warning'
+        });
       } else {
         axios
           .post(api.shippingAddress, {
@@ -174,10 +177,11 @@ export default class PaymentAddress extends Component {
   setExistingAddress(address_id) {
     NetInfo.getConnectionInfo().then(connection => {
       if (connection.type == "none") {
-        ToastAndroid.show(
-          "Please check your internet connection and try again",
-          2000
-        );
+        Toast.show({
+          text: "Please check your internet connection and try again",
+          type: 'warning',
+          duration: 2000
+        });
       } else {
         axios
           .post(api.paymentAddress, {
@@ -201,10 +205,11 @@ export default class PaymentAddress extends Component {
   addNewShippingAddress() {
     NetInfo.getConnectionInfo().then(connection => {
       if (connection.type == "none") {
-        ToastAndroid.show(
-          "Please check your internet connection and try again",
-          2000
-        );
+        Toast.show({
+          text: "Please check your internet connection and try again",
+          duration: 2000,
+          type: 'warning'
+        });
       } else {
         // axios
         //   .post(api.shippingAddress, {
@@ -271,16 +276,19 @@ export default class PaymentAddress extends Component {
     } = this.state;
     if (isLoading) {
       return (
+        <Root>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <ActivityIndicator color={colors.primaryBlue} />
           <Text>Fetching your Adresses</Text>
         </View>
+        </Root>
       );
     }
 
     return (
+      <Root>
       <ScrollView style={styles.container}>
         <List>
           <ListItem itemDivider>
@@ -375,6 +383,7 @@ export default class PaymentAddress extends Component {
 
         {this.renderCheckout()}
       </ScrollView>
+      </Root>
     );
   }
 }

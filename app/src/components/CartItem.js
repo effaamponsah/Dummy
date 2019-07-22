@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  Image,
   TouchableOpacity,
   ActivityIndicator,
   NetInfo
@@ -23,7 +22,7 @@ import {
 } from "native-base";
 import { observer } from "mobx-react/native";
 import axios from "axios";
-import { Overlay } from "react-native-elements";
+import { Overlay, Image } from "react-native-elements";
 
 export default class CartItems extends Component {
   constructor(props) {
@@ -50,10 +49,8 @@ export default class CartItems extends Component {
           })
           .then(res => {
             this.setState({ isVisible: false });
-            // console.log(res.data);
           })
           .catch(e => {
-            // console.log("Error");
             this.setState({ isVisible: false });
             Toast.show({
               text: "Connect to the internet and try again",
@@ -82,7 +79,6 @@ export default class CartItems extends Component {
           })
           .then(res => {
             this.setState({ isVisible: false });
-            // console.log(res.data);
           })
           .catch(e => {
             this.setState({ isVisible: false });
@@ -113,10 +109,8 @@ export default class CartItems extends Component {
           })
           .then(res => {
             this.setState({ isVisible: false });
-            // console.log(res.data);
           })
           .catch(e => {
-            // console.warn(e);
             Toast.show({
               text: "Connect to the internet and try again",
               type: 'warning'
@@ -149,13 +143,9 @@ export default class CartItems extends Component {
                       <View
                         key={data.name}
                         style={{
-                          // paddingLeft: 5,
-                          // paddingRight: 5,
-                          // backgroundColor: colors.violet,
                           marginLeft: 10,
                           borderRadius: 10,
-                          // paddinfBottom: 0,
-                          // paddingTop: 0
+                        
                         }}
                       >
                         <Text style={{ fontSize: 13, color: colors.violet }}>

@@ -63,7 +63,7 @@ export default class Slider extends Component {
             <View key={i}>
               <Image
                 source={data.img}
-                style={{ height: 200, maxWidth: SCREEN.width }}
+                style={{ maxWidth: SCREEN.width, height: SCREEN.height /3 }}
               />
               <View />
 

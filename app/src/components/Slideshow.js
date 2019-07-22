@@ -35,9 +35,7 @@ export default class SlideShow extends Component {
   render() {
     
     return (
-      <View>
       <Slider />    
-      </View>
     );
   }
 }
